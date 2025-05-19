@@ -1,0 +1,61 @@
+---
+title: "fMRI Analysis Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+
+```{r}
+#check to see if working directory is there
+file.exists("/Users/lynova/Desktop/Neurohacking_data-master/BRAINIX/DICOM/FLAIR")
+setwd("/Users/lynova/Desktop/Neurohacking_data-master/BRAINIX/DICOM/FLAIR")
+
+#checking DICOM files
+list.files(pattern = "\\.dcm$") 
+
+library(oro.dicom) #load the library
+slice = readDICOM("IM-0001-0001.dcm")
+
+cat("Class of slice:\n")
+print(class(slice))
+
+
+#his helps you understand what’s inside the object—typically things like "hdr" (headers), "img" (image pixel data), etc.
+cat("\nNames in slice:\n")
+print(names(slice))
+
+#Prints the class of the first image slice.
+cat("\nClass of first image slice:\n")
+print(class(slice$img[[1]]))
+
+cat("\nDimensions of first image slice:\n")
+print(dim(slice$img[[1]]))
+
+# Displays the dimensions (number of rows and columns) of the first image slice.
+#This tells you the resolution of the image (e.g., 288 x 288 pixels).
+
+par(mfrow = c(2, 3))  # Arrange plots in 2 rows x 3 columns
+
+d <- dim(t(slice$img[[1]]))  # Get dimensions once
+
+#WE GONNA GET ALL THE COLOURS...ALL OF IT.
+image(1:d[1], 1:d[2], t(slice$img[[1]]), col = gray(0:64/64), asp = 1, main = "Grayscale")
+image(1:d[1], 1:d[2], t(slice$img[[1]]), col = heat.colors(64), asp = 1, main = "Heat Colors")
+image(1:d[1], 1:d[2], t(slice$img[[1]]), col = terrain.colors(64), asp = 1, main = "Terrain Colors")
+image(1:d[1], 1:d[2], t(slice$img[[1]]), col = topo.colors(64), asp = 1, main = "Topographic Colors")
+image(1:d[1], 1:d[2], t(slice$img[[1]]), col = cm.colors(64), asp = 1, main = "CM Colors")
+image(1:d[1], 1:d[2], t(slice$img[[1]]), col = rainbow(64), asp = 1, main = "Rainbow Colors")
+
+d <- slice$img[[1]][101:105, 121:125]
+print(d)
+
+
+
+
+```
+``
+
+
